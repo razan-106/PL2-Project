@@ -3,7 +3,7 @@ package Razan;
 // child class of user
 
 public class PM extends user {
-    private String department;
+    private String department; 
 
     public PM() {
         super();

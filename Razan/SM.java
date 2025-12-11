@@ -12,7 +12,7 @@ public class SM {
 
         System.out.println("===== Customer Registration =====");
 
-        System.out.print("Enter your name: ");
+        System.out.print("\nEnter your name: ");
         String name = input.nextLine();
 
         System.out.print("Enter your email: ");
@@ -29,7 +29,7 @@ public class SM {
 
         System.out.println("\n===== Create Event =====");
 
-        System.out.print("Enter event type (e.g., Wedding): ");
+        System.out.print("\nEnter event type (e.g., Wedding): ");
         String type = input.nextLine();
 
         System.out.print("Enter event date: ");
@@ -46,7 +46,7 @@ public class SM {
         bookings.add(booking);
 
         System.out.println("\n===== Booking Created =====");
-        System.out.println(booking);
+        System.out.println("\n"+ booking);
 
         // PM receives
         PM pm = new PM();
@@ -59,6 +59,6 @@ public class SM {
         pm.showBoll(booking);
 
         System.out.println("\n===== Final Booking Details =====");
-        System.out.println(booking);
+        System.out.println("\n"+ booking);
     }
 }

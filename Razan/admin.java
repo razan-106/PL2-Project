@@ -2,7 +2,8 @@ package Razan;
 
 import java.util.List;
 
-// child class of user
+// child class of user 
+//عشان يورث كل حاجة من اليوزر
 
 public class admin extends user {
 
@@ -17,5 +18,6 @@ public class admin extends user {
     public void addUser(List<user> list, user u) { list.add(u); }
     public void deleteUser(List<user> list, user u) { list.remove(u); }
     public void updateUser(user u, String newName) { u.name = newName; }
+    // كده اديناله صلاحيات انه يضيف ويشيل ويعدل في اليوزرز
 
 }

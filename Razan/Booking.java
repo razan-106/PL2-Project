@@ -10,13 +10,12 @@ public class Booking {
     private double totalPrice;
 
     public Booking(customer c, event event) { 
-        this.bookingId = new Random().nextInt(10000); // رقم عشوائي
+        this.bookingId = new Random().nextInt(10000); // رقم عشوائي بس ثابت 
         this.customerId = c;
         this.eventId = event;
         this.status = "Pending";
-        this.totalPrice = 500; // هيتحسب بعدين حسب نوع الإيفنت
-}
-
+        this.totalPrice = new Random().nextInt(3000); // سعر عشوائي بس ثابت
+    }
 
     public Booking(int bookingId, customer customer, event event, String status, double totalPrice) {
         this.bookingId = bookingId;
@@ -67,8 +66,8 @@ public class Booking {
         if (eventId == null) {
 
             return "Booking{Invalid Booking: Event is null}";
-     }
-        return "Booking{" + eventId.getType() + ", Status=" + status + ", Price=" + getTotalPrice() + "}";
+        }
+        return "Booking : {" + eventId.getType() + " , Date : " + eventId.getDate() + " , Location : " + eventId.getLocation() +  " , Status : " + status + " , Price =" + getTotalPrice() +  " }";
     }
 
 }

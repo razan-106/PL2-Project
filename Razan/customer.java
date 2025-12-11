@@ -6,7 +6,7 @@ import java.util.*;
 
 public class customer extends user {
     private String phoneNumber;
-    private List<Booking> bookings = new ArrayList<>();
+    private List<Booking> bookings = new ArrayList<>(); //عشان نخزن الحجوزات بتاعة ال customer
 
     public customer() {
         super();

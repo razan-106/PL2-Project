@@ -8,6 +8,7 @@ public class user {
     protected String email;
     protected String password;
     protected String role;
+ //عملنا ال attributes دي protected عشان ال admin يقدر يوصل ليها ويرثها
  
     public user() {}
 
