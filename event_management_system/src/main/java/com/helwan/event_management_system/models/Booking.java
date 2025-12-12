@@ -1,4 +1,4 @@
-package Razan;
+package com.helwan.event_management_system.models;
 
 import java.util.Random;
 

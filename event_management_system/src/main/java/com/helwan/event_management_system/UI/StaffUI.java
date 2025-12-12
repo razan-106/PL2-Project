@@ -1,6 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 
+
 public class StaffUI {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Staff Board");

@@ -1,4 +1,4 @@
-package Razan;
+package com.helwan.event_management_system.models;
 
 
 // child class of user

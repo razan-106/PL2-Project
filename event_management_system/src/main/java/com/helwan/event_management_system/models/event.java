@@ -1,4 +1,4 @@
-package Razan;
+package com.helwan.event_management_system.models;
 
 
 public class event {
