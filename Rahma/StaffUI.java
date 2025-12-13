@@ -1,108 +1,138 @@
 import java.awt.*;
-import javax.swing.*; //المكتبات دي علشان ال GUI 
+import javax.swing.*;
+import javax.swing.table.JTableHeader;
 
-public class StaffUI {
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Staff Board"); //بعمل ال frame الاساسي 
-        frame.setSize(700, 500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        frame.setLayout(new BorderLayout()); //بحدد نوع ال layout
-        frame.getContentPane().setBackground(new Color(30, 41, 59)); //لون ال frame
-        frame.setVisible(true);
+//used inheritance
+public class StaffUI extends JFrame { 
+    //Global Variable 
+    private JTable pmTable, spTable,staffTable ;
+    private JButton assignBtn, submitBtn, confirmBtn ;
+    private JTextField priceField, dateField ;
 
-        JTabbedPane tabbedPane = new JTabbedPane(); //بحط صفحات مختلفة جوا الframe اللي عملته
-        JPanel pmpanel = new JPanel(); //بعمل panel لكل تاب
-        JPanel sppanel = new JPanel();
+    private final Color Main_BackGround = new Color(30, 41, 59 );
+    private final Color Snd_BackGround = new Color (15, 23, 42);
+    private final Color Text_setForeground = Color.white;
+    private final Color Text_setForeground_pan = Color.lightGray;
 
-        tabbedPane.addTab("Project Manager", pmpanel);
-        pmpanel.setBackground(new Color(30,41,59));
-        tabbedPane.setForegroundAt(0, Color.lightGray);
-        tabbedPane.setBackgroundAt(0, new Color(30,41,59));
-
-        tabbedPane.addTab("Servise Provider", sppanel);
-        sppanel.setBackground(new Color(30,41,59));
-        tabbedPane.setForegroundAt(1, Color.lightGray);   
-        tabbedPane.setBackgroundAt(1, new Color(30,41,59));
-        
-        frame.add(tabbedPane, BorderLayout.CENTER); //احط التابين في نص ال frame
-
-        JPanel staffPanel = new JPanel();
-        staffPanel.setLayout(new BorderLayout());
-
-        tabbedPane.addTab("Staff", staffPanel);
-        staffPanel.setBackground(new Color(30, 41, 59));
-        tabbedPane.setForegroundAt(2, Color.lightGray);
-        tabbedPane.setBackgroundAt(2, new Color(30,41,59));
-        
-        String [] staffcolumns = {"ID", "Name", "Phone", "Role"}; //اسماء اعمده جدول ال staff
-        Object[][] staffData = {}; 
-        JTable staffTable = new JTable(staffData, staffcolumns);  //بعمل الاعمده واعرض البيانات للجدول
-        staffTable.setBackground(new Color(15, 23, 42));
-        JScrollPane staffScroll = new JScrollPane(staffTable) ;  //scroll علشان يظهر كامل
-        staffScroll.getViewport().setBackground(new Color(15, 23, 42));
-        staffPanel.add(staffScroll) ;
-        staffTable.getTableHeader().setBackground(new Color(30,41,59));
-        staffTable.getTableHeader().setForeground(Color.WHITE);            // لون كتابة الهيدر
-
-        String[] pmColumns = {"Booking ID", "Customer", "Event Type", "Status"} ; //اعمده جدول ال project manager
-        Object[][] pmData = {} ;  
-        
-        JTable pmTable = new JTable(pmData, pmColumns);
-        pmTable.setBackground(new Color(15, 23 , 42));
-        JScrollPane pmScroll = new JScrollPane(pmTable);
-        pmScroll.getViewport().setBackground(new Color(15, 23, 42));
-        pmTable.getTableHeader().setBackground(new Color(30, 41, 59));
-        pmTable.getTableHeader().setForeground(Color.WHITE);
-        pmpanel.setLayout(new BorderLayout()); 
-        pmpanel.add(pmScroll, BorderLayout.CENTER);
-
-        JButton assignBtn = new JButton("Assign to Service Provider"); //بعمل ال button
-        JPanel pmButtons = new JPanel(); //panel to place the button in
-        pmButtons.add(assignBtn);
-        pmpanel.add(pmButtons,BorderLayout.SOUTH);
-        pmButtons.setBackground(new Color(30, 41, 59));   // 
-
-        String[] spColumns={"Task ID", "Event", "Status"};
-        Object[][] spData = {};
-        
-        JTable spTable = new JTable(spData, spColumns); //انشاء جدول SP
-        spTable.setBackground(new Color(15,23,42));
-        JScrollPane spScroll = new JScrollPane(spTable);
-        spScroll.getViewport().setBackground(new Color(15,23,42));
-        spTable.getTableHeader().setBackground(new Color(30, 41, 59));
-        spTable.getTableHeader().setForeground(Color.WHITE);
-        sppanel.setLayout(new BorderLayout()); //بحط الجدول في تاب ال  Service Provider
-        sppanel.add(spScroll, BorderLayout.CENTER);
-
-        JPanel spControls = new JPanel();
-        spControls.setLayout(new FlowLayout());
-
-        JLabel dateLabel = new JLabel("Delivery Date:"); //ادخل التاريخ
-        JTextField dateField = new JTextField(10);
-        dateLabel.setForeground(Color.lightGray);
-        dateField.setBackground(new Color(15, 23, 42));   // خلفية 
-        dateField.setForeground(Color.WHITE);
-        dateField.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
-
-        JLabel priceLabel = new JLabel("Price:"); //ادخل السعر
-        JTextField priceField = new JTextField(10);
-        priceLabel.setForeground(Color.lightGray);
-        priceField.setBackground(new Color(15, 23, 42));
-        priceField.setForeground(Color.WHITE);
-        priceField.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
-
-        JButton submitPriceBtn = new JButton("Submit Price");
-        JButton confirmDateBtn = new JButton("Confirm Date");
-        spControls.setBackground(new Color(30, 41, 59)); 
+//Frame
+public StaffUI() {
+    setTitle("Staff Board");
+    setSize(700,500);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new BorderLayout());
+    getContentPane().setBackground(Main_BackGround);
 
 
-        spControls.add(priceLabel);
-        spControls.add(priceField);
-        spControls.add(dateLabel);
-        spControls.add(dateField);
-        spControls.add(submitPriceBtn);
-        spControls.add(confirmDateBtn);
+    JTabbedPane tabbedPane = new JTabbedPane(); 
+    tabbedPane.setBackground(Main_BackGround);
+    tabbedPane.setForeground(Text_setForeground_pan);
+    //بحط التابات
+    tabbedPane.addTab("Project Manager",createPMPanel());
+    tabbedPane.addTab("Service Provider",createSPPanel());
+    tabbedPane.addTab("Staff",createStaffPanel());
+    add(tabbedPane, BorderLayout.CENTER);
+}
 
-        sppanel.add(spControls, BorderLayout.SOUTH);
-    }
+//function Project Manager
+private JPanel createPMPanel() {
+    JPanel pmPanel = new JPanel();
+    pmPanel.setLayout(new BorderLayout());
+    pmPanel.setBackground(Main_BackGround);
+    
+    String [] pmcolumns = {"Booking ID", "Customer","Event Type","Status"};
+    Object [][] pmdata = {};
+    pmTable = createTable(pmdata,pmcolumns);
+
+    JScrollPane pmscroll = new JScrollPane(pmTable);
+    pmscroll.getViewport().setBackground(Snd_BackGround);
+    pmPanel.add(pmscroll,BorderLayout.CENTER);
+
+    assignBtn = new JButton("Assign to Service Provider");
+    JPanel pmButtons = new JPanel();
+    pmButtons.setBackground(Main_BackGround);
+    pmButtons.add(assignBtn);
+    pmPanel.add(pmButtons , BorderLayout.SOUTH);
+    return pmPanel;
+}
+
+//Function Service Provider
+private JPanel createSPPanel() {
+    JPanel spPanel = new JPanel();
+    spPanel.setLayout(new BorderLayout());
+    spPanel.setBackground(Main_BackGround);
+
+    String [] spcolumns = {"Task ID", "Event", "Status"};
+    Object [][] spdata ={};
+    spTable = createTable(spdata, spcolumns);
+
+    JScrollPane spscroll = new JScrollPane(spTable);
+    spscroll.getViewport().setBackground(Snd_BackGround);
+    spPanel.add(spscroll,BorderLayout.CENTER);
+
+    JPanel spcontrols = new JPanel();
+    spcontrols.setLayout(new FlowLayout());
+    spcontrols.setBackground(Main_BackGround);
+
+    JLabel priceLabel = new JLabel("Price:");
+    priceLabel.setForeground(Text_setForeground_pan);
+    priceField = new JTextField(10);
+    priceField.setBackground(Snd_BackGround);
+    priceField.setForeground(Text_setForeground);
+    priceField.setFont(new Font("Arial", Font.BOLD, 14));
+
+    JLabel dateLabel = new JLabel("Delivery date:");
+    dateLabel.setForeground(Text_setForeground_pan);
+    dateField = new JTextField(10);
+    dateField.setBackground(Snd_BackGround);
+    dateField.setForeground(Text_setForeground);
+    dateField.setFont(new Font("Arial", Font.BOLD, 14));
+
+    submitBtn = new JButton("Submit Price");
+    confirmBtn = new JButton("Confirm Date");
+
+    spcontrols.add(priceLabel);
+    spcontrols.add(priceField);
+    spcontrols.add(dateLabel);
+    spcontrols.add(dateField);
+    spcontrols.add(submitBtn);
+    spcontrols.add(confirmBtn);
+
+    spPanel.add(spcontrols,BorderLayout.SOUTH);
+    return spPanel;
+}
+
+//Function Staff
+private JPanel createStaffPanel() {
+    JPanel staffPanel = new JPanel();
+    staffPanel.setLayout(new BorderLayout());
+    staffPanel.setBackground(Main_BackGround);
+    
+    String [] staffcolumns = {"ID", "Name", "Phone", "Role"};
+    Object [][] staffdata ={};
+    staffTable = createTable(staffdata, staffcolumns);
+
+    JScrollPane staffscroll = new JScrollPane(staffTable);
+    staffscroll.getViewport().setBackground(Snd_BackGround);
+    staffPanel.add(staffscroll,BorderLayout.CENTER);
+
+    return staffPanel;
+}
+
+//Function Create Table
+private JTable createTable(Object[][] data, String [] columns) {
+    JTable table = new JTable(data, columns);
+    table.setBackground(Snd_BackGround);
+    table.setForeground(Text_setForeground);
+    
+    JTableHeader header = table.getTableHeader();
+    header.setBackground(Main_BackGround);
+    header.setForeground(Text_setForeground);
+    
+    return table;
+}
+public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new StaffUI().setVisible(true);
+        });
+}
 }
