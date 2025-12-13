@@ -1,3 +1,6 @@
+
+import java.text.ParseException;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -41,9 +44,9 @@ public class EVentBookForm extends javax.swing.JFrame {
         evlocation = new javax.swing.JLabel();
         evGuestcount = new javax.swing.JLabel();
         evAdditionalDetails = new javax.swing.JLabel();
-        eventDateField = new javax.swing.JFormattedTextField();
         BookNowBtn = new javax.swing.JButton();
-        backBtn = new javax.swing.JButton();
+        ClearBtn = new javax.swing.JButton();
+        eventDateField = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,17 +93,25 @@ public class EVentBookForm extends javax.swing.JFrame {
         evAdditionalDetails.setForeground(new java.awt.Color(255, 255, 255));
         evAdditionalDetails.setText("Additional Details");
 
+        BookNowBtn.setText("Book Now");
+        BookNowBtn.addActionListener(this::BookNowBtnActionPerformed);
+
+        ClearBtn.setText("Clear");
+        ClearBtn.addActionListener(this::ClearBtnActionPerformed);
+
         try {
             eventDateField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##-##-####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        eventDateField.addActionListener(this::eventDateFieldActionPerformed);
-
-        BookNowBtn.setText("Book Now");
-        BookNowBtn.addActionListener(this::BookNowBtnActionPerformed);
-
-        backBtn.setText("Back");
+        eventDateField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                eventDateFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                eventDateFieldFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -119,19 +130,19 @@ public class EVentBookForm extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addGap(1, 1, 1)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(backBtn)
+                                    .addComponent(ClearBtn)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(evGuestcount)
                                         .addComponent(evlocation)
                                         .addComponent(evAdditionalDetails)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(eventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(eventDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(eventGuestCount, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(eventAdditionalDetailsScr, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BookNowBtn))
+                            .addComponent(BookNowBtn)
+                            .addComponent(eventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(eventDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(Header)
@@ -142,15 +153,15 @@ public class EVentBookForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(Header)
-                .addGap(35, 35, 35)
+                .addGap(41, 41, 41)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(evType)
                     .addComponent(eventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(evDate, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(14, 14, 14)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(evDate)
                     .addComponent(eventDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(evlocation))
@@ -165,7 +176,7 @@ public class EVentBookForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BookNowBtn)
-                    .addComponent(backBtn))
+                    .addComponent(ClearBtn))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -223,13 +234,49 @@ public class EVentBookForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
 
-    private void eventDateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventDateFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_eventDateFieldActionPerformed
-
     private void BookNowBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BookNowBtnActionPerformed
-        // TODO add your handling code here:
+                                          
+    String eventType = eventTypeComboBox.getSelectedItem().toString();
+    String dateInput = eventDateField.getText().trim();
+    if (dateInput.equals("-  -") || dateInput.length() < 10 || !isValidDate(dateInput)) {
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "Invalid date! Please check the day/month and ensure the year is 2025 or later.", 
+            "Date Error", 
+            javax.swing.JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    javax.swing.JOptionPane.showMessageDialog(this, "Booking submitted successfully for: " + eventType + "! Redirecting to My Bookings...");
+    MyBookingsScreen bookingsScreen = new MyBookingsScreen(); 
+    bookingsScreen.setVisible(true); 
+    this.dispose();
+
     }//GEN-LAST:event_BookNowBtnActionPerformed
+
+    private void ClearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearBtnActionPerformed
+                                        
+    eventDateField.setText("");           
+    enentAdditionalDetailstxt.setText("");
+    eventGuestCount.setValue(1);      
+    eventTypeComboBox.setSelectedIndex(0);
+    }//GEN-LAST:event_ClearBtnActionPerformed
+
+    private void eventDateFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_eventDateFieldFocusGained
+                                       
+    if (eventDateField.getText().equals("DD-MM-YYYY")) {
+        eventDateField.setText("");
+        eventDateField.setForeground(new java.awt.Color(0, 0, 0)); 
+    }
+
+    }//GEN-LAST:event_eventDateFieldFocusGained
+
+    private void eventDateFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_eventDateFieldFocusLost
+                                           
+    if (eventDateField.getText().trim().equals("")) {
+        eventDateField.setText("DD-MM-YYYY");
+        eventDateField.setForeground(new java.awt.Color(153, 153, 153)); 
+    }
+
+    }//GEN-LAST:event_eventDateFieldFocusLost
 
     /**
      * @param args the command line arguments
@@ -255,11 +302,26 @@ public class EVentBookForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new EVentBookForm().setVisible(true));
     }
+private boolean isValidDate(String dateStr) {
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy");
+    sdf.setLenient(false);
 
+    try {
+       
+        java.util.Date inputDate = sdf.parse(dateStr);
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(inputDate);
+        int year = cal.get(java.util.Calendar.YEAR);
+
+        return year >= 2025; 
+    } catch (ParseException e) {
+        return false;
+    }
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BookNowBtn;
+    private javax.swing.JButton ClearBtn;
     private javax.swing.JLabel Header;
-    private javax.swing.JButton backBtn;
     private javax.swing.JTextArea enentAdditionalDetailstxt;
     private javax.swing.JLabel evAdditionalDetails;
     private javax.swing.JLabel evDate;
