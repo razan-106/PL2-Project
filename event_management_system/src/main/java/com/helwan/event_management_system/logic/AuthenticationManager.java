@@ -21,18 +21,17 @@ public class AuthenticationManager {
     }
 
     // Authenticate user by username/email and password
-    public boolean authenticate(String username, String password) {
+    public user authenticate(String username, String password) {
 
         // 1) Load users from file
         ArrayList<user> users = fileManager.loadUsers();
 
-        // 2) Check if any user matches
-        for (user u : users) {
-            if (u.getEmail().equalsIgnoreCase(username) && u.getPassword().equals(password)) {
-                return true;
+        for (user user : users) {
+            if (user.getEmail().equals(username)
+                && user.getPassword().equals(password)) {
+                return user; // SUCCESS
             }
         }
-
-        return false; // no match found
-    }
+        return null; // FAIL
+        }
 }

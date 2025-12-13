@@ -39,7 +39,7 @@ public class SM {
         String location = input.nextLine();
 
         // For now: simple event ID
-        event e = new event(1, type, date, location);
+        Event e = new Event(1, type, date, location,3,"fake data");
 
         // Customer books the event
         Booking booking = c.bookEvent(e);

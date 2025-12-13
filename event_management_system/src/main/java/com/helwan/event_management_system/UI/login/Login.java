@@ -13,6 +13,9 @@ import com.helwan.event_management_system.UI.booking.MyBookingsScreen;
 import com.helwan.event_management_system.UI.register.Register;
 import com.helwan.event_management_system.data.FileManager;
 import com.helwan.event_management_system.logic.AuthenticationManager;
+import com.helwan.event_management_system.logic.NavigationManager;
+import com.helwan.event_management_system.logic.SessionManager;
+import com.helwan.event_management_system.models.user;
 
 public class Login extends javax.swing.JFrame {
     
@@ -218,14 +221,21 @@ if (jCheckBox1.isSelected()) {
         AuthenticationManager auth = new AuthenticationManager(fm);
 
         // 3) Authenticate
-        if (auth.authenticate(username, password)) {
+        user loggedInUser = auth.authenticate(username, password);
+        if (loggedInUser != null) {
 
-            // Navigate to MyBookingsScreen (or any other UI)
-            new MyBookingsScreen().setVisible(true);
-            this.setVisible(false);
+            // Store user in the session
+            SessionManager.setCurrentUser(loggedInUser);
+
+            // Role-based navigation
+            NavigationManager.navigateAfterLogin();
+            this.dispose();
 
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Invalid username or password");
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Invalid username or password"
+            );
         }
 }                                        
 
@@ -241,31 +251,6 @@ javax.swing.JOptionPane.showMessageDialog(this, "Don't worry! \nPlease contact t
     regPage.setVisible(true);
     this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;

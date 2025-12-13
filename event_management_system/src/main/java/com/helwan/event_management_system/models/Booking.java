@@ -5,11 +5,11 @@ import java.util.Random;
 public class Booking {
     private int bookingId;
     private customer customerId;
-    private event eventId;
+    private Event eventId;
     private String status;
     private double totalPrice;
 
-    public Booking(customer c, event event) { 
+    public Booking(customer c, Event event) { 
         this.bookingId = new Random().nextInt(10000); // رقم عشوائي
         this.customerId = c;
         this.eventId = event;
@@ -18,10 +18,10 @@ public class Booking {
 }
 
 
-    public Booking(int bookingId, customer customer, event event, String status, double totalPrice) {
+    public Booking(int bookingId, customer customer, Event newEvent, String status, double totalPrice) {
         this.bookingId = bookingId;
         this.customerId = customer;
-        this.eventId = event;
+        this.eventId = newEvent;
         this.status = status;
         this.totalPrice = totalPrice;
     }
@@ -41,10 +41,10 @@ public class Booking {
         this.customerId = customerId;
     }
 
-    public event getEventId() {
+    public Event getEventId() {
         return eventId;
     }
-    public void setEventId(event eventId) {
+    public void setEventId(Event eventId) {
         this.eventId = eventId;
     }
 

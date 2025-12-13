@@ -17,7 +17,7 @@ public class customer extends user {
         this.phoneNumber = phoneNumber;
     }
 
-    public Booking bookEvent(event event){
+    public Booking bookEvent(Event event){
         Booking newBooking = new Booking(this, event);
         bookings.add(newBooking);
         return newBooking;

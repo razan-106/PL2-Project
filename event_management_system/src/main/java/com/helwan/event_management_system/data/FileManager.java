@@ -140,7 +140,7 @@ public class FileManager {
     //Method to read information from booking file.
     public ArrayList<Booking> readInfoFromBooking(String bookFile,
             ArrayList<customer> customerList,
-            ArrayList<event> eventList) {
+            ArrayList<Event> eventList) {
 
         ArrayList<Booking> bookings = new ArrayList<>();
         File file = new File(bookFile);
@@ -178,8 +178,8 @@ public class FileManager {
                 }
 
                 // ------  search for Event ID   ------
-                event foundEvent = null;
-                for (event e : eventList) {
+                Event foundEvent = null;
+                for (Event e : eventList) {
                     if (e.getEventId() == eventId) {
                         foundEvent = e;
                         break;
@@ -201,7 +201,7 @@ public class FileManager {
         return bookings;
     }
 
-    public ArrayList<Booking> loadBookings(ArrayList<customer> customerList, ArrayList<event> eventList) {
+    public ArrayList<Booking> loadBookings(ArrayList<customer> customerList, ArrayList<Event> eventList) {
         return readInfoFromBooking(this.bookingFilePath, customerList, eventList);
     }
 
