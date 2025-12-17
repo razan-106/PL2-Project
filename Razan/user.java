@@ -2,7 +2,8 @@ package Razan;
 
 // parent class
 
-public class user {
+public abstract class user {
+
     protected int id;
     protected String name;
     protected String email;
