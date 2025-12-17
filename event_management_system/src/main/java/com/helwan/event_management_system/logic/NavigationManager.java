@@ -18,30 +18,24 @@ public class NavigationManager {
 
     public static void navigateAfterLogin() {
 
-        String email = SessionManager.getCurrentUser().getEmail();
         String role = SessionManager.getCurrentUser().getRole();
 
-        // Check if email contains @admin (case-insensitive) - if so, route to admin dashboard
-        if (email.toLowerCase().contains("@admin")) {
-            new AdminDashboard().setVisible(true);
-            return;
-        }
+        // Route based on role only
+        switch (role.toLowerCase()) {
 
-        switch (role) {
-
-            case "Admin":
+            case "admin":
                 new AdminDashboard().setVisible(true);
                 break;
 
-            case "Customer":
+            case "customer":
                 new EVentBookForm().setVisible(true);
                 break;
 
-            case "PM":
+            case "pm":
                 new ProjectManager().setVisible(true);
                 break;
 
-            case "SP":
+            case "sp":
                 new ServiceProvider().setVisible(true);
                 break;
 

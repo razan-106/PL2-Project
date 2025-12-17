@@ -25,13 +25,20 @@ public class AuthenticationManager {
 
         // 1) Load users from file
         ArrayList<user> users = fileManager.loadUsers();
+        
+        System.out.println("Attempting to authenticate: " + username);
+        System.out.println("Total users in system: " + users.size());
 
         for (user user : users) {
-            if (user.getEmail().equals(username)
+            System.out.println("Checking user: " + user.getEmail() + " / " + user.getPassword());
+            // Make email comparison case-insensitive
+            if (user.getEmail().equalsIgnoreCase(username)
                 && user.getPassword().equals(password)) {
+                System.out.println("Authentication SUCCESS!");
                 return user; // SUCCESS
             }
         }
+        System.out.println("Authentication FAILED!");
         return null; // FAIL
         }
 }
