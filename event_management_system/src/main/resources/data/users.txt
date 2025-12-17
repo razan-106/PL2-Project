@@ -1,4 +1,1 @@
-omar,omarayman@hotmail.com,1,omaraa,Customer
-omar,omarayman1@hotmail.com,2,omaraa,Customer
-omar,maee#fsadf,3,asda,Customer
-omar,maee#fsadf2,4,asda,Customer
+Admin,Admin@Admin,2,123,Customer

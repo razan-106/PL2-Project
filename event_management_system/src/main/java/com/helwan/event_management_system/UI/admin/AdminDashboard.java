@@ -9,15 +9,26 @@
  */
 package com.helwan.event_management_system.UI.admin;
 
+import com.helwan.event_management_system.data.FileManager;
+import com.helwan.event_management_system.models.user;
+import java.util.ArrayList;
+
 public class AdminDashboard extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AdminDashboard.class.getName());
+    private FileManager fileManager;
+    private ArrayList<user> usersList;
 
     /**
      * Creates new form AdminDashboard
      */
     public AdminDashboard() {
         initComponents();
+        fileManager = new FileManager(
+            "src/main/resources/data/users.txt",
+            "src/main/resources/data/booking.txt"
+        );
+        loadUsersFromFile();
 tblUsers.getTableHeader().setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
     @Override
     public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -148,101 +159,169 @@ tblUsers.setRowHeight(25);
 
     
     private void btnDeleteuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteuserActionPerformed
-        // TODO add your handling code here:
-      
-    javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblUsers.getModel();
-    int selectedRow = tblUsers.getSelectedRow();
-    if (selectedRow != -1) {
-    model.removeRow(selectedRow);
-    javax.swing.JOptionPane.showMessageDialog(this, "User Deleted!"); 
-    }  
-    else {
-    javax.swing.JOptionPane.showMessageDialog(this, "Please select a user first!");
-    }
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblUsers.getModel();
+        int selectedRow = tblUsers.getSelectedRow();
+        if (selectedRow != -1) {
+            // Get user email to find and remove from list
+            String userEmail = model.getValueAt(selectedRow, 1).toString();
+            
+            // Remove from list
+            usersList.removeIf(u -> u.getEmail().equals(userEmail));
+            
+            // Remove from table
+            model.removeRow(selectedRow);
+            
+            // Save changes to file
+            fileManager.savingUser(usersList, fileManager.getUserFilePath());
+            
+            javax.swing.JOptionPane.showMessageDialog(this, "User Deleted Successfully!"); 
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a user first!");
+        }
     }//GEN-LAST:event_btnDeleteuserActionPerformed
 
     private void btnAdduserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdduserActionPerformed
-        // TODO add your handling code here:
-javax.swing.JTextField txtName = new javax.swing.JTextField();
-javax.swing.JTextField txtEmail = new javax.swing.JTextField();
-javax.swing.JTextField txtPass = new javax.swing.JTextField();
+        javax.swing.JTextField txtName = new javax.swing.JTextField();
+        javax.swing.JTextField txtEmail = new javax.swing.JTextField();
+        javax.swing.JTextField txtPass = new javax.swing.JTextField();
 
-String[] roles = {"User", "Manager (PM)", "Employee (SP)"};
-javax.swing.JComboBox<String> cmbRole = new javax.swing.JComboBox<>(roles);
+        String[] roles = {"Customer", "PM", "SP", "Admin"};
+        javax.swing.JComboBox<String> cmbRole = new javax.swing.JComboBox<>(roles);
 
-Object[] message = {
-    "Full Name:", txtName,
-    "Email:", txtEmail,
-    "Role:", cmbRole,
-    "Password:", txtPass
-};
+        Object[] message = {
+            "Full Name:", txtName,
+            "Email:", txtEmail,
+            "Role:", cmbRole,
+            "Password:", txtPass
+        };
 
-while(true) {
-    int option = javax.swing.JOptionPane.showConfirmDialog(this, message, "Add New User", javax.swing.JOptionPane.OK_CANCEL_OPTION);
-    if (option != javax.swing.JOptionPane.OK_OPTION) {
-        break; 
-    }
+        while(true) {
+            int option = javax.swing.JOptionPane.showConfirmDialog(this, message, "Add New User", javax.swing.JOptionPane.OK_CANCEL_OPTION);
+            if (option != javax.swing.JOptionPane.OK_OPTION) {
+                break; 
+            }
 
-    String name = txtName.getText();
-    String email = txtEmail.getText();
-    String pass = txtPass.getText();
-    String role = cmbRole.getSelectedItem().toString();
-    if (name.isEmpty() || email.isEmpty() || pass.isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please fill all fields! ");
-        
-    } else if (!email.contains("@")) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Invalid Email! Must contain '@' ");
-        
-    } else if (pass.length() < 6) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Password is too weak! Must be at least 6 characters ");
-        
-    } else {
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblUsers.getModel();
-        model.addRow(new Object[]{name, email, role, pass});
-        
-        javax.swing.JOptionPane.showMessageDialog(this, "User Added Successfully! ");
-        
-        break; 
-    }
-}
+            String name = txtName.getText();
+            String email = txtEmail.getText();
+            String pass = txtPass.getText();
+            String role = cmbRole.getSelectedItem().toString();
+            
+            if (name.isEmpty() || email.isEmpty() || pass.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Please fill all fields! ");
+            } else if (!email.contains("@")) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Invalid Email! Must contain '@' ");
+            } else if (pass.length() < 6) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Password is too weak! Must be at least 6 characters ");
+            } else {
+                // Generate new ID
+                int newId = fileManager.generateUserId(usersList);
+                
+                // Create user object based on role
+                user newUser = createUserByRole(newId, name, email, pass, role);
+                
+                // Add to list
+                usersList.add(newUser);
+                
+                // Add to table
+                javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblUsers.getModel();
+                model.addRow(new Object[]{name, email, role, pass});
+                
+                // Save to file
+                fileManager.savingUser(usersList, fileManager.getUserFilePath());
+                
+                javax.swing.JOptionPane.showMessageDialog(this, "User Added Successfully! ");
+                
+                break; 
+            }
+        }
     }//GEN-LAST:event_btnAdduserActionPerformed
 
     private void btnUpdateuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateuserActionPerformed
-        // TODO add your handling code here:
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblUsers.getModel();
-int selectedRow = tblUsers.getSelectedRow();
+        int selectedRow = tblUsers.getSelectedRow();
 
-if (selectedRow != -1) {
-    javax.swing.JTextField txtName = new javax.swing.JTextField(model.getValueAt(selectedRow, 0).toString());
-    javax.swing.JTextField txtEmail = new javax.swing.JTextField(model.getValueAt(selectedRow, 1).toString());
-    String[] roles = {"User", "Manager (PM)", "Employee (SP)"}; 
-    javax.swing.JComboBox<String> cmbRole = new javax.swing.JComboBox<>(roles);
-    String currentRole = model.getValueAt(selectedRow, 2).toString();
-    cmbRole.setSelectedItem(currentRole);
+        if (selectedRow != -1) {
+            String oldEmail = model.getValueAt(selectedRow, 1).toString();
+            
+            javax.swing.JTextField txtName = new javax.swing.JTextField(model.getValueAt(selectedRow, 0).toString());
+            javax.swing.JTextField txtEmail = new javax.swing.JTextField(model.getValueAt(selectedRow, 1).toString());
+            String[] roles = {"Customer", "PM", "SP", "Admin"}; 
+            javax.swing.JComboBox<String> cmbRole = new javax.swing.JComboBox<>(roles);
+            String currentRole = model.getValueAt(selectedRow, 2).toString();
+            cmbRole.setSelectedItem(currentRole);
 
-    javax.swing.JTextField txtPass = new javax.swing.JTextField(model.getValueAt(selectedRow, 3).toString());
-    Object[] message = {
-        "Name:", txtName, 
-        "Email:", txtEmail,
-        "Role:", cmbRole,      
-        "Password:", txtPass   
-    }; 
+            javax.swing.JTextField txtPass = new javax.swing.JTextField(model.getValueAt(selectedRow, 3).toString());
+            Object[] message = {
+                "Name:", txtName, 
+                "Email:", txtEmail,
+                "Role:", cmbRole,      
+                "Password:", txtPass   
+            }; 
 
-    int option = javax.swing.JOptionPane.showConfirmDialog(this, message, "Update User", javax.swing.JOptionPane.OK_CANCEL_OPTION);
-    
-    if (option == javax.swing.JOptionPane.OK_OPTION) {
-        model.setValueAt(txtName.getText(), selectedRow, 0);
-        model.setValueAt(txtEmail.getText(), selectedRow, 1);
-        model.setValueAt(cmbRole.getSelectedItem().toString(), selectedRow, 2); 
-        model.setValueAt(txtPass.getText(), selectedRow, 3); 
-        
-        javax.swing.JOptionPane.showMessageDialog(this, "User Updated Successfully! ");
-    }
-}   
-else {
-    javax.swing.JOptionPane.showMessageDialog(this, "Select a user to update! ");
-}
+            int option = javax.swing.JOptionPane.showConfirmDialog(this, message, "Update User", javax.swing.JOptionPane.OK_CANCEL_OPTION);
+            
+            if (option == javax.swing.JOptionPane.OK_OPTION) {
+                String newName = txtName.getText();
+                String newEmail = txtEmail.getText();
+                String newRole = cmbRole.getSelectedItem().toString();
+                String newPass = txtPass.getText();
+                
+                // Update in table
+                model.setValueAt(newName, selectedRow, 0);
+                model.setValueAt(newEmail, selectedRow, 1);
+                model.setValueAt(newRole, selectedRow, 2); 
+                model.setValueAt(newPass, selectedRow, 3); 
+                
+                // Update in list
+                for (user u : usersList) {
+                    if (u.getEmail().equals(oldEmail)) {
+                        u.setName(newName);
+                        u.setEmail(newEmail);
+                        u.setPassword(newPass);
+                        u.setRole(newRole);
+                        break;
+                    }
+                }
+                
+                // Save to file
+                fileManager.savingUser(usersList, fileManager.getUserFilePath());
+                
+                javax.swing.JOptionPane.showMessageDialog(this, "User Updated Successfully! ");
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Select a user to update! ");
+        }
     }//GEN-LAST:event_btnUpdateuserActionPerformed
+
+    private void loadUsersFromFile() {
+        usersList = fileManager.loadUsers();
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblUsers.getModel();
+        model.setRowCount(0); // Clear existing rows
+        
+        for (user u : usersList) {
+            model.addRow(new Object[]{
+                u.getName(),
+                u.getEmail(),
+                u.getRole(),
+                u.getPassword()
+            });
+        }
+    }
+    
+    private user createUserByRole(int id, String name, String email, String password, String role) {
+        switch (role.toLowerCase()) {
+            case "customer":
+                return new com.helwan.event_management_system.models.customer(id, name, email, password, "", "Customer");
+            case "pm":
+                return new com.helwan.event_management_system.models.PM(id, name, email, password, "", "PM", "");
+            case "sp":
+                return new com.helwan.event_management_system.models.SP(id, name, email, password, "", "SP");
+            case "admin":
+                return new com.helwan.event_management_system.models.admin(id, name, email, password, "Admin");
+            default:
+                return new user(id, name, email, password, role);
+        }
+    }
 
     /**
      * @param args the command line arguments

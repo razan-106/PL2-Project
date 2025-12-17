@@ -1,3 +1,5 @@
+package com.helwan.event_management_system.UI;
+
 import java.awt.*;
 import javax.swing.*;
 
