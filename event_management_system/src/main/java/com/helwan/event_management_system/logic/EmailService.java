@@ -18,9 +18,9 @@ public class EmailService {
 
     // SMTP credentials (READ FROM ENV OR CONFIG)
     private static final String SMTP_EMAIL =
-            "event_managment_system@hotmail.com";
+            "omaraymanelngm@gmail.com";
 
-    private static final String SMTP_PASSWORD = "m159357654"; 
+    private static final String SMTP_PASSWORD = "rode mfaw eqif irvq"; 
 
     public EmailService(String customerEmail) {
         this.customerEmail = customerEmail;
@@ -37,7 +37,7 @@ public class EmailService {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.office365.com");
+        props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
         Session session = Session.getInstance(props,
