@@ -7,7 +7,8 @@ package com.helwan.event_management_system.logic;
 import com.helwan.event_management_system.UI.*;
 import com.helwan.event_management_system.UI.admin.AdminDashboard;
 import com.helwan.event_management_system.UI.booking.EVentBookForm;
-import com.helwan.event_management_system.UI.booking.MyBookingsScreen;
+import com.helwan.event_management_system.UI.ProjectManager;
+import com.helwan.event_management_system.UI.ServiceProvider;
 
 /**
  *
@@ -37,11 +38,11 @@ public class NavigationManager {
                 break;
 
             case "PM":
-               // new PMDashbStaffUIoard().setVisible(true);
+                new ProjectManager().setVisible(true);
                 break;
 
             case "SP":
-             //   new SPDashboard().setVisible(true);
+                new ServiceProvider().setVisible(true);
                 break;
 
             default:
