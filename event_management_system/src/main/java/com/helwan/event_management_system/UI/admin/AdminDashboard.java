@@ -25,8 +25,8 @@ public class AdminDashboard extends javax.swing.JFrame {
     public AdminDashboard() {
         initComponents();
         fileManager = new FileManager(
-            "src/main/resources/data/users.txt",
-            "src/main/resources/data/booking.txt"
+            FileManager.getResourcePath("data/users.txt"),
+            FileManager.getResourcePath("data/booking.txt")
         );
         loadUsersFromFile();
 tblUsers.getTableHeader().setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {

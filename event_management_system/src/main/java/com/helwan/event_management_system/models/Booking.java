@@ -13,7 +13,7 @@ public class Booking {
         this.bookingId = new Random().nextInt(10000); // رقم عشوائي
         this.customerId = c;
         this.eventId = event;
-        this.status = "Pending";
+        this.status = "New";
         this.totalPrice = 500; // هيتحسب بعدين حسب نوع الإيفنت
 }
 
