@@ -1,2 +1,2 @@
-Admin,admin@system.com,1,admin123,Admin
-SuperAdmin,superadmin@system.com,2,admin123,Admin
+Admin,Admin@Admin,2,123,Customer
+omar,omarayyman@hotmail.com,3,omaraa,Customer
