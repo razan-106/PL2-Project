@@ -1,6 +1,12 @@
 package com.helwan.event_management_system.UI;
 
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
+import com.helwan.event_management_system.data.FileManager;
+import com.helwan.event_management_system.models.Booking;
+import com.helwan.event_management_system.models.Event;
+import com.helwan.event_management_system.models.customer;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,7 +21,7 @@ public class ProjectManager extends javax.swing.JFrame {
      */
     public ProjectManager() {
         initComponents();
-        
+        loadBookings();
     }
 
     /**
@@ -139,8 +145,89 @@ public class ProjectManager extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Load bookings from file and populate the table
+     */
+    private void loadBookings() {
+        try {
+            FileManager fileManager = new FileManager(
+                FileManager.getResourcePath("data/users.txt"),
+                FileManager.getResourcePath("data/booking.txt")
+            );
+
+            // Load users, customers, and events
+            ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
+            ArrayList<Event> events = fileManager.loadEvents();
+            
+            // Extract customer objects from users
+            ArrayList<customer> customers = new ArrayList<>();
+            for (com.helwan.event_management_system.models.user u : users) {
+                if (u instanceof customer) {
+                    customers.add((customer) u);
+                }
+            }
+            
+            // Load bookings with populated customer and event lists
+            ArrayList<Booking> bookings = fileManager.loadBookings(customers, events);
+            System.out.println("DEBUG: Loaded " + bookings.size() + " bookings from " + customers.size() + " customers and " + events.size() + " events");
+
+            // Clear existing rows
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+
+            // Add booking data to table
+            for (Booking booking : bookings) {
+                Object[] row = {
+                    booking.getBookingId(),
+                    booking.getCustomerId().getName(),
+                    booking.getEventId().getType(),
+                    booking.getStatus()
+                };
+                model.addRow(row);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error loading bookings: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        try {
+            FileManager fileManager = new FileManager(
+                FileManager.getResourcePath("data/users.txt"),
+                FileManager.getResourcePath("data/booking.txt")
+            );
+
+            // Load users, customers, and events
+            ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
+            ArrayList<Event> events = fileManager.loadEvents();
+            ArrayList<customer> customers = new ArrayList<>();
+            for (com.helwan.event_management_system.models.user u : users) {
+                if (u instanceof customer) customers.add((customer) u);
+            }
+            ArrayList<Booking> bookings = fileManager.loadBookings(customers, events);
+
+            boolean updated = false;
+            for (Booking booking : bookings) {
+                if ("New".equalsIgnoreCase(booking.getStatus())) {
+                    booking.setStatus("Processing");
+                    // Simulate sending to SP (print to console)
+                    System.out.println("Assigned booking ID " + booking.getBookingId() + " to Service Provider.");
+                    updated = true;
+                }
+            }
+            if (updated) {
+                fileManager.savingBooking(bookings, fileManager.getBookingFilePath());
+                javax.swing.JOptionPane.showMessageDialog(this, "All new bookings assigned to Service Provider and set to Processing.");
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "No new bookings to assign.");
+            }
+            loadBookings(); // Refresh table
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error assigning bookings: " + e.getMessage());
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -185,3 +272,4 @@ public class ProjectManager extends javax.swing.JFrame {
 
     
 }
+

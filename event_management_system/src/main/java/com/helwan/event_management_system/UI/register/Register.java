@@ -265,10 +265,10 @@ public class Register extends javax.swing.JFrame {
         String email = txtEmail.getText();
         String password = txtPass.getText();
 
-        // Create FileManager with your file paths
+        // Create FileManager with proper resource paths
         FileManager fm = new FileManager(
-            "src/main/resources/data/users.txt",
-            "src/main/resources/data/booking.txt"
+            FileManager.getResourcePath("data/users.txt"),
+            FileManager.getResourcePath("data/booking.txt")
         );
 
         // Create SignupManager

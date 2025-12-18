@@ -24,15 +24,43 @@ public class ServiceProvider extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(Main_BackGround);
 
-    
         String [] spcolumns = {"Task ID", "Event", "Status","Price","Date","Location"};
-        Object [][] spdata ={};
+        Object [][] spdata;
+        try {
+            com.helwan.event_management_system.data.FileManager fileManager = new com.helwan.event_management_system.data.FileManager(
+                com.helwan.event_management_system.data.FileManager.getResourcePath("data/users.txt"),
+                com.helwan.event_management_system.data.FileManager.getResourcePath("data/booking.txt")
+            );
+            java.util.ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
+            java.util.ArrayList<com.helwan.event_management_system.models.Event> events = fileManager.loadEvents();
+            java.util.ArrayList<com.helwan.event_management_system.models.customer> customers = new java.util.ArrayList<>();
+            for (com.helwan.event_management_system.models.user u : users) {
+                if (u instanceof com.helwan.event_management_system.models.customer) customers.add((com.helwan.event_management_system.models.customer) u);
+            }
+            java.util.ArrayList<com.helwan.event_management_system.models.Booking> bookings = fileManager.loadBookings(customers, events);
+            java.util.List<Object[]> processingRows = new java.util.ArrayList<>();
+            for (com.helwan.event_management_system.models.Booking booking : bookings) {
+                if ("Processing".equalsIgnoreCase(booking.getStatus())) {
+                    processingRows.add(new Object[] {
+                        booking.getBookingId(),
+                        booking.getEventId().getType(),
+                        booking.getStatus(),
+                        booking.getTotalPrice(),
+                        booking.getEventId().getDate(),
+                        booking.getEventId().getLocation()
+                    });
+                }
+            }
+            spdata = processingRows.toArray(new Object[0][]);
+        } catch (Exception e) {
+            spdata = new Object[0][spcolumns.length];
+            System.out.println("Error loading bookings for SP: " + e.getMessage());
+        }
         spTable = createTable(spdata, spcolumns);
 
         JScrollPane spscroll = new JScrollPane(spTable);
         spscroll.getViewport().setBackground(Snd_BackGround);
         add(spscroll, BorderLayout.CENTER);
-
 
         JPanel spcontrols = new JPanel();
         spcontrols.setLayout(new FlowLayout());
@@ -62,7 +90,61 @@ public class ServiceProvider extends JFrame {
         spcontrols.add(dateField);
         spcontrols.add(confirmBtn);
 
-        add(spcontrols, BorderLayout.SOUTH); 
+        add(spcontrols, BorderLayout.SOUTH);
+
+        // Add action for Submit Price
+        submitBtn.addActionListener(e -> {
+            int selectedRow = spTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Please select a booking to set the price.");
+                return;
+            }
+            String priceText = priceField.getText().trim();
+            double price = 150.0;
+            if (!priceText.isEmpty()) {
+                try {
+                    price = Double.parseDouble(priceText);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Invalid price. Please enter a valid number.");
+                    return;
+                }
+            }
+            int bookingId = (int) spTable.getValueAt(selectedRow, 0);
+            try {
+                com.helwan.event_management_system.data.FileManager fileManager = new com.helwan.event_management_system.data.FileManager(
+                    com.helwan.event_management_system.data.FileManager.getResourcePath("data/users.txt"),
+                    com.helwan.event_management_system.data.FileManager.getResourcePath("data/booking.txt")
+                );
+                java.util.ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
+                java.util.ArrayList<com.helwan.event_management_system.models.Event> events = fileManager.loadEvents();
+                java.util.ArrayList<com.helwan.event_management_system.models.customer> customers = new java.util.ArrayList<>();
+                for (com.helwan.event_management_system.models.user u : users) {
+                    if (u instanceof com.helwan.event_management_system.models.customer) customers.add((com.helwan.event_management_system.models.customer) u);
+                }
+                java.util.ArrayList<com.helwan.event_management_system.models.Booking> bookings = fileManager.loadBookings(customers, events);
+                boolean found = false;
+                for (com.helwan.event_management_system.models.Booking booking : bookings) {
+                    if (booking.getBookingId() == bookingId && "Processing".equalsIgnoreCase(booking.getStatus())) {
+                        booking.setTotalPrice(price);
+                        booking.setStatus("Priced");
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    fileManager.savingBooking(bookings, fileManager.getBookingFilePath());
+                    JOptionPane.showMessageDialog(this, "Price set and status updated to 'Priced'.");
+                    // Refresh the table
+                    this.dispose();
+                    new ServiceProvider().setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Could not find the selected booking or it is not in 'Processing' status.");
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error updating booking: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        });
     }
 
     private JTable createTable(Object[][] data, String [] columns) {
