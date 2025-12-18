@@ -8,7 +8,7 @@ public class Event_Management_System {
 
     public static void main(String[] args) {
 
-        // Set Nimbus Look & Feel once
+        // Set Nimbus Look & Feel onceee
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {

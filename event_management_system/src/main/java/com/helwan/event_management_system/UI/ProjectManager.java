@@ -232,7 +232,9 @@ public class ProjectManager extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        openChatWindow();
     }//GEN-LAST:event_jButton2ActionPerformed
+    
 
     /**
      * @param args the command line arguments
@@ -270,6 +272,7 @@ public class ProjectManager extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 
+    
     
 }
 

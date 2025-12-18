@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.helwan.event_management_system.UI.booking;
-
+import java.io.*;
+import javax.swing.*;
+import java.awt.*;
 import com.helwan.event_management_system.UI.login.Login;
 import com.helwan.event_management_system.data.FileManager;
 import com.helwan.event_management_system.logic.EmailService;
@@ -58,6 +60,7 @@ public class EVentBookForm extends javax.swing.JFrame {
         BookNowBtn = new javax.swing.JButton();
         ClearBtn = new javax.swing.JButton();
         eventDateField = new javax.swing.JFormattedTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -124,40 +127,48 @@ public class EVentBookForm extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Contact US");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(116, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Header)
+                .addGap(186, 186, 186))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(evDate)
-                                    .addComponent(evType))
-                                .addGap(99, 99, 99))
+                            .addComponent(evDate)
+                            .addComponent(evType))
+                        .addGap(99, 99, 99))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(ClearBtn)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(evGuestcount)
-                                        .addComponent(evlocation)
-                                        .addComponent(evAdditionalDetails)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(eventGuestCount, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(eventAdditionalDetailsScr, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BookNowBtn)
-                            .addComponent(eventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(eventDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(evGuestcount)
+                                    .addComponent(evlocation)
+                                    .addComponent(evAdditionalDetails)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGap(76, 76, 76)
+                                .addComponent(ClearBtn)
+                                .addGap(80, 80, 80)
+                                .addComponent(BookNowBtn)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eventGuestCount, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eventAdditionalDetailsScr, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eventTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eventDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(Header)
-                        .addGap(186, 186, 186))))
+                        .addComponent(jButton1)
+                        .addGap(37, 37, 37)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,9 +196,11 @@ public class EVentBookForm extends javax.swing.JFrame {
                     .addComponent(evAdditionalDetails)
                     .addComponent(eventAdditionalDetailsScr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BookNowBtn)
-                    .addComponent(ClearBtn))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ClearBtn)
+                        .addComponent(jButton1))
+                    .addComponent(BookNowBtn))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -196,16 +209,16 @@ public class EVentBookForm extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(22, 22, 22)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -213,7 +226,7 @@ public class EVentBookForm extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
@@ -379,6 +392,11 @@ public class EVentBookForm extends javax.swing.JFrame {
 
     }//GEN-LAST:event_eventDateFieldFocusLost
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        openChatWindow();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 private boolean isValidDate(String dateStr) {
     java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy");
     sdf.setLenient(false);
@@ -409,9 +427,106 @@ private boolean isValidDate(String dateStr) {
     private javax.swing.JSpinner eventGuestCount;
     private javax.swing.JComboBox<String> eventTypeComboBox;
     private javax.swing.JLabel evlocation;
+    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     // End of variables declaration//GEN-END:variables
+
+// ==========================================================
+    // ============= كود الشات والتواريخ (إضافات) ===============
+    // ==========================================================
+
+    // دالة فتح الشات
+    private void openChatWindow() {
+        JDialog chatDialog = new JDialog(this, "Contact Project Manager", true);
+        chatDialog.setSize(400, 500);
+        chatDialog.setLayout(new BorderLayout());
+        chatDialog.setLocationRelativeTo(this);
+
+        JTextArea chatArea = new JTextArea();
+        chatArea.setEditable(false);
+        chatArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        JScrollPane scroll = new JScrollPane(chatArea);
+        chatDialog.add(scroll, BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        JTextField inputField = new JTextField();
+        JButton btnSend = new JButton("Send");
+        JButton btnRefresh = new JButton("Refresh");
+        
+        JPanel btnPanel = new JPanel(new GridLayout(1, 2));
+        btnPanel.add(btnSend);
+        btnPanel.add(btnRefresh);
+
+        bottomPanel.add(inputField, BorderLayout.CENTER);
+        bottomPanel.add(btnPanel, BorderLayout.EAST);
+        chatDialog.add(bottomPanel, BorderLayout.SOUTH);
+
+        // هنا بنجيب اسم اليوزر الحالي من السيشن عشان نعرف مين بيكلم مين
+        String myName = "Customer"; 
+        if (com.helwan.event_management_system.logic.SessionManager.isLoggedIn()) {
+             myName = com.helwan.event_management_system.logic.SessionManager.getCurrentUser().getName();
+        }
+        String otherSide = "PM";
+
+        loadMessagesFromFile(chatArea, myName);
+
+        String finalMyName = myName; // عشان اللامدا
+        btnSend.addActionListener(e -> {
+            String msg = inputField.getText().trim();
+            if (!msg.isEmpty()) {
+                saveMessageToFile(finalMyName, otherSide, msg);
+                inputField.setText("");
+                loadMessagesFromFile(chatArea, finalMyName);
+            }
+        });
+
+        btnRefresh.addActionListener(e -> {
+            loadMessagesFromFile(chatArea, finalMyName);
+        });
+
+        chatDialog.setVisible(true);
+    }
+
+    // دالة قراءة الرسائل
+    private void loadMessagesFromFile(JTextArea area, String me) {
+        area.setText("");
+        File file = new File("messages.txt");
+        if (!file.exists()) return;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 3) {
+                    String sender = parts[0];
+                    String receiver = parts[1];
+                    String msg = parts[2];
+
+                    if (sender.equalsIgnoreCase(me) || receiver.equalsIgnoreCase(me)) {
+                        if (sender.equalsIgnoreCase(me)) {
+                            area.append("Me: " + msg + "\n");
+                        } else {
+                            area.append(sender + ": " + msg + "\n");
+                        }
+                        area.append("-----------------\n");
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // دالة حفظ الرسائل
+    private void saveMessageToFile(String sender, String receiver, String msg) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("messages.txt", true))) {
+            bw.write(sender + "," + receiver + "," + msg);
+            bw.newLine();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error sending message!");
+        }
+    }
 }
