@@ -276,16 +276,10 @@ public class EVentBookForm extends javax.swing.JFrame {
         }
 
         // 4️⃣ FileManager
-        FileManager fm = new FileManager(
-            FileManager.getResourcePath("data/users.txt"),
-            FileManager.getResourcePath("data/booking.txt")
-        );
+        FileManager fm = new FileManager();
 
         // 5️⃣ Load existing bookings
-        ArrayList<Booking> bookings = fm.loadBookings(
-            new ArrayList<>(),
-            new ArrayList<>()
-        );
+        ArrayList<Booking> bookings = fm.loadBookings();
 
         // 6️⃣ Generate Booking ID
         int bookingId = fm.generateBookingId(bookings);
@@ -341,7 +335,7 @@ public class EVentBookForm extends javax.swing.JFrame {
 
 
         // 1️⃣2️⃣ Navigate to MyBookings
-        new MyBookingsScreen().setVisible(true);
+        new MyBookingsScreen((customer)user).setVisible(true);
         this.dispose();
 }                                          
 

@@ -153,10 +153,7 @@ public class ProjectManager extends javax.swing.JFrame {
      */
     private void loadBookings() {
         try {
-            FileManager fileManager = new FileManager(
-                FileManager.getResourcePath("data/users.txt"),
-                FileManager.getResourcePath("data/booking.txt")
-            );
+            FileManager fileManager = new FileManager();
 
             // Load users, customers, and events
             ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
@@ -171,7 +168,7 @@ public class ProjectManager extends javax.swing.JFrame {
             }
             
             // Load bookings with populated customer and event lists
-            ArrayList<Booking> bookings = fileManager.loadBookings(customers, events);
+            ArrayList<Booking> bookings = fileManager.loadBookings();
             System.out.println("DEBUG: Loaded " + bookings.size() + " bookings from " + customers.size() + " customers and " + events.size() + " events");
 
             // Clear existing rows
@@ -197,10 +194,7 @@ public class ProjectManager extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            FileManager fileManager = new FileManager(
-                FileManager.getResourcePath("data/users.txt"),
-                FileManager.getResourcePath("data/booking.txt")
-            );
+            FileManager fileManager = new FileManager();
 
             // Load users, customers, and events
             ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
@@ -209,7 +203,7 @@ public class ProjectManager extends javax.swing.JFrame {
             for (com.helwan.event_management_system.models.user u : users) {
                 if (u instanceof customer) customers.add((customer) u);
             }
-            ArrayList<Booking> bookings = fileManager.loadBookings(customers, events);
+            ArrayList<Booking> bookings = fileManager.loadBookings();
 
             boolean updated = false;
             for (Booking booking : bookings) {

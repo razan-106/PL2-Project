@@ -1,5 +1,3 @@
-
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -20,11 +18,19 @@ import java.nio.file.Files;
  */
 public class FileManager {
 
+    // Hardcoded constant paths
+    public static final String USER_FILE_PATH = "src/main/resources/data/users.txt";
+    public static final String BOOKING_FILE_PATH = "src/main/resources/data/bookings.txt";
+    public static final String EVENT_FILE_PATH = "src/main/resources/data/events.txt";
+
     private String userFilePath;
     private String bookingFilePath;
 
     public FileManager() {
-
+        this.userFilePath = USER_FILE_PATH;
+        this.bookingFilePath = BOOKING_FILE_PATH;
+        createUserFileIfNotExist(userFilePath);
+        createBookingFileIfNotExist(bookingFilePath);
     }
 
     public FileManager(String userFilePath, String bookingFilePath) {
@@ -34,72 +40,6 @@ public class FileManager {
         createBookingFileIfNotExist(bookingFilePath);
     }
     
-    /**
-     * Get the correct file path from resources or working directory
-     * When running from JAR, uses user home directory for data files
-     * When running from IDE/command line, uses src/main/resources/data/
-     */
-    public static String getResourcePath(String resourcePath) {
-        // First, try to get the resource from the classpath
-        URL resource = FileManager.class.getClassLoader().getResource(resourcePath);
-        
-        if (resource != null) {
-            try {
-                // Convert URL to file path (works in IDE)
-                return new java.io.File(resource.toURI()).getAbsolutePath();
-            } catch (Exception e) {
-                // Resource is in a JAR - use app data directory
-                return getAppDataPath(resourcePath);
-            }
-        }
-        
-        // Fallback: check if src/main/resources/data exists (development mode)
-        String devPath = "src/main/resources/" + resourcePath;
-        if (new java.io.File(devPath).exists()) {
-            return devPath;
-        }
-        
-        // Last resort: use app data directory and try to initialize with defaults
-        return initializeAppDataFile(resourcePath);
-    }
-    
-    /**
-     * Get or create application data directory in user's home
-     */
-    private static String getAppDataPath(String resourcePath) {
-        String appDataDir = System.getProperty("user.home") + File.separator + ".event_management_system" + File.separator + "data";
-        new File(appDataDir).mkdirs();
-        return appDataDir + File.separator + new File(resourcePath).getName();
-    }
-    
-    /**
-     * Initialize app data file with default content if it doesn't exist
-     */
-    private static String initializeAppDataFile(String resourcePath) {
-        String appDataPath = getAppDataPath(resourcePath);
-        File dataFile = new File(appDataPath);
-        
-        // If file doesn't exist, try to create it with default content
-        if (!dataFile.exists()) {
-            try {
-                dataFile.createNewFile();
-                
-                // If this is the users file, populate with default admin users
-                if (resourcePath.contains("users")) {
-                    try (PrintWriter writer = new PrintWriter(new FileWriter(dataFile))) {
-                        writer.println("Admin,admin@system.com,1,admin123,Admin");
-                        writer.println("SuperAdmin,superadmin@system.com,2,admin123,Admin");
-                        System.out.println("Initialized users.txt with default admin accounts");
-                    }
-                }
-                System.out.println("Created new data file: " + appDataPath);
-            } catch (Exception e) {
-                System.out.println("Could not initialize data file: " + e.getMessage());
-            }
-        }
-        
-        return appDataPath;
-    }
     //Setters & Getters
     public String getUserFilePath() {
         return userFilePath;
@@ -121,8 +61,11 @@ public class FileManager {
     public static void createUserFileIfNotExist(String userFilePath) {
         File user = new File(userFilePath);
 
-        if (!user.exists())
+        if (!user.exists()) {
             try {
+                // Create parent directories if they don't exist
+                user.getParentFile().mkdirs();
+                
                 user.createNewFile();
                 System.out.println("The name of user File created:" + user.getName());
                 System.out.println("The path of user File created:" + user.getPath());
@@ -137,13 +80,17 @@ public class FileManager {
             } catch (IOException e) {
                 System.out.println("Failed to create user file " + e.getMessage());
             }
+        }
     }
 
     //Create method about booking file if not exist
     public static void createBookingFileIfNotExist(String bookingFilePath) {
         File booking = new File(bookingFilePath);
-        if (!booking.exists())
+        if (!booking.exists()) {
             try {
+                // Create parent directories if they don't exist
+                booking.getParentFile().mkdirs();
+                
                 booking.createNewFile();
                 System.out.println("The name of booking File created:" + booking.getName());
                 System.out.println("The path of booking File created:" + booking.getPath());
@@ -151,6 +98,7 @@ public class FileManager {
             } catch (IOException e) {
                 System.out.println("Failed to create booking file " + e.getMessage());
             }
+        }
     }
 
     //Method to read information from user file.
@@ -214,16 +162,23 @@ public class FileManager {
     }
 
     //Method to read information from booking file.
-    public ArrayList<Booking> readInfoFromBooking(String bookFile,
-            ArrayList<customer> customerList,
-            ArrayList<Event> eventList) {
+    public ArrayList<Booking> readInfoFromBooking() {
 
         ArrayList<Booking> bookings = new ArrayList<>();
-        File file = new File(bookFile);
+        File file = new File(this.bookingFilePath);
 
         if (!file.exists()) {
             System.out.println("Booking file doesn't exist.");
             return bookings;
+        }
+
+        // Load users and filter customers
+        ArrayList<user> users = loadUsers();
+        ArrayList<customer> customerList = new ArrayList<>();
+        for (user u : users) {
+            if (u instanceof customer) {
+                customerList.add((customer) u);
+            }
         }
 
         try (Scanner input = new Scanner(file)) {
@@ -253,32 +208,27 @@ public class FileManager {
                     }
                 }
 
-                // ------  search for Event ID   ------
-                Event foundEvent = null;
-                for (Event e : eventList) {
-                    if (e.getEventId() == eventId) {
-                        foundEvent = e;
-                        break;
-                    }
-                }
-
-                if (foundCustomer == null || foundEvent == null) {
-                    System.out.println("Warning: Invalid customer/event ID in line: " + line);
+                if (foundCustomer == null) {
+                    System.out.println("WARNING: Customer ID " + customerId + " not found in users file!");
                     continue;
                 }
+
+                // ------ create minimal Event object only with ID ------
+                Event foundEvent = new Event(eventId, "", "", 0, "");
 
                 bookings.add(new Booking(bookingId, foundCustomer, foundEvent, status, totalPrice));
             }
 
         } catch (Exception e) {
             System.out.println("Error reading booking file: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return bookings;
     }
 
-    public ArrayList<Booking> loadBookings(ArrayList<customer> customerList, ArrayList<Event> eventList) {
-        return readInfoFromBooking(this.bookingFilePath, customerList, eventList);
+    public ArrayList<Booking> loadBookings() {
+        return readInfoFromBooking();
     }
 
     //SavingUser Method
@@ -300,6 +250,11 @@ public class FileManager {
             System.out.println("Error happens while saving userInfo " + e.getMessage());
         }
     }
+    
+    // Overloaded method to save users using the default path
+    public void savingUser(ArrayList<user> users) {
+        savingUser(users, this.userFilePath);
+    }
 
     //SavingBooking Method
     public void savingBooking(ArrayList<Booking> bookings, String bookingFilePath) {
@@ -319,6 +274,11 @@ public class FileManager {
         } catch (IOException e) {
             System.out.println("Error happens while saving bookingInfo " + e.getMessage());
         }
+    }
+    
+    // Overloaded method to save bookings using the default path
+    public void savingBooking(ArrayList<Booking> bookings) {
+        savingBooking(bookings, this.bookingFilePath);
     }
 
 
@@ -355,9 +315,8 @@ public class FileManager {
      */
     public ArrayList<Event> loadEvents() {
         ArrayList<Event> events = new ArrayList<>();
-        String eventsFilePath = getResourcePath("data/events.txt");
         
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(eventsFilePath))) {
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(EVENT_FILE_PATH))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
@@ -379,4 +338,5 @@ public class FileManager {
         }
         
         return events;
-    }}
+    }
+}
