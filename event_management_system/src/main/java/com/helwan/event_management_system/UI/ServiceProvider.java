@@ -145,6 +145,72 @@ public class ServiceProvider extends JFrame {
                 ex.printStackTrace();
             }
         });
+           // =================================================================
+        // حط الكود ده تحت قفلة زرار submitBtn وقبل قفلة الـ Constructor
+        // =================================================================
+
+        // Add action for Confirm Date
+        confirmBtn.addActionListener(e -> {
+            int selectedRow = spTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Please select a booking to set the date.");
+                return;
+            }
+
+            String dateText = dateField.getText().trim();
+            if (dateText.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid date first!");
+                return;
+            }
+
+            int bookingId = (int) spTable.getValueAt(selectedRow, 0);
+
+            try {
+                // 1. تحميل البيانات (نفس الكود المعتاد)
+                com.helwan.event_management_system.data.FileManager fileManager = new com.helwan.event_management_system.data.FileManager(
+                    com.helwan.event_management_system.data.FileManager.getResourcePath("data/users.txt"),
+                    com.helwan.event_management_system.data.FileManager.getResourcePath("data/booking.txt")
+                );
+                
+                java.util.ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
+                java.util.ArrayList<com.helwan.event_management_system.models.Event> events = fileManager.loadEvents();
+                java.util.ArrayList<com.helwan.event_management_system.models.customer> customers = new java.util.ArrayList<>();
+                for (com.helwan.event_management_system.models.user u : users) {
+                    if (u instanceof com.helwan.event_management_system.models.customer) customers.add((com.helwan.event_management_system.models.customer) u);
+                }
+                java.util.ArrayList<com.helwan.event_management_system.models.Booking> bookings = fileManager.loadBookings(customers, events);
+
+                // 2. البحث عن الحجز وتحديث التاريخ
+                boolean found = false;
+                for (com.helwan.event_management_system.models.Booking booking : bookings) {
+                    // بندور بنفس الـ ID ولازم الحالة تكون لسه Processing
+                    if (booking.getBookingId() == bookingId) {
+                        
+                        // تحديث التاريخ هنا
+                        booking.getEventId().setDate(dateText);
+                        
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    // 3. الحفظ
+                    fileManager.savingBooking(bookings, fileManager.getBookingFilePath());
+                    JOptionPane.showMessageDialog(this, "Date Confirmed Successfully!");
+                    
+                    // 4. تحديث الجدول (عشان التاريخ يظهر في الخانة بتاعته)
+                    this.dispose();
+                    new ServiceProvider().setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error: Booking not found.");
+                }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error updating date: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        });
     }
 
     private JTable createTable(Object[][] data, String [] columns) {

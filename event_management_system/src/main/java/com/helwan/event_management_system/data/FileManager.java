@@ -372,7 +372,7 @@ public class FileManager {
                 int guestCount = Integer.parseInt(eventData[4]);
                 String details = eventData[5];
                 
-                events.add(new Event(eventId, type, date, location, guestCount, details));
+                events.add(new Event(eventId, type, location, guestCount, details));
             }
         } catch (Exception e) {
             System.out.println("Error reading events file: " + e.getMessage());

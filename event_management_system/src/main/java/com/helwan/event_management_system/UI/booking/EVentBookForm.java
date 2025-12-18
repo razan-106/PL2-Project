@@ -246,21 +246,15 @@ public class EVentBookForm extends javax.swing.JFrame {
 
         // 1️⃣ Read form data
         String eventType = eventTypeComboBox.getSelectedItem().toString();
-        String eventDate = eventDateField.getText();
         String location = jComboBox2.getSelectedItem().toString();
         int guestCount = (int) eventGuestCount.getValue();
         String details = enentAdditionalDetailstxt.getText();
+       String eventDate = "To be determined";
 
-        if (eventDate.equals("-  -") || eventDate.length() < 10 || !isValidDate(eventDate)) {
-            javax.swing.JOptionPane.showMessageDialog(this, 
-                "Invalid date! Please check the day/month and ensure the year is 2025 or later.", 
-                "Date Error", 
-                javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        
         // 2️⃣ Validate fields
         if (eventType == null || eventType.isEmpty()
-                || eventDate.trim().isEmpty()
+               
                 || location == null || location.isEmpty()) {
 
             javax.swing.JOptionPane.showMessageDialog(
@@ -297,13 +291,14 @@ public class EVentBookForm extends javax.swing.JFrame {
         int bookingId = fm.generateBookingId(bookings);
 
         // 7️⃣ Create Event
+
         Event newEvent = new Event(
-            bookingId,        // temporary eventId
-            eventType,
-            eventDate,
-            location,
-            guestCount,
-            details
+            bookingId,        
+            eventType,        
+            // eventDate,     
+            location,         
+            guestCount,       
+            details          
         );
 
         // 8️⃣ Booking metadata
@@ -328,7 +323,7 @@ public class EVentBookForm extends javax.swing.JFrame {
             this,
             "Booking Created Successfully!"
         );
-
+        
         // 1️⃣3️⃣ Send email asynchronously to logged-in customer
         user user = SessionManager.getCurrentUser();
 
@@ -352,7 +347,7 @@ public class EVentBookForm extends javax.swing.JFrame {
 
     private void ClearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearBtnActionPerformed
                                         
-    eventDateField.setText("");           
+ 
     enentAdditionalDetailstxt.setText("");
     eventGuestCount.setValue(1);      
     eventTypeComboBox.setSelectedIndex(0);

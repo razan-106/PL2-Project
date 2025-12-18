@@ -1,4 +1,7 @@
 package com.helwan.event_management_system.UI;
+import java.io.*;
+import java.awt.*;
+import javax.swing.*;
 
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
@@ -272,7 +275,105 @@ public class ProjectManager extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 
-    
+        // ==========================================================
+    // ============= كود الشات الخاص بالمدير (PM) ===============
+    // ==========================================================
+
+    // دالة فتح الشات
+    private void openChatWindow() {
+        // 1. تصميم الشباك
+        JDialog chatDialog = new JDialog(this, "Customer Support Chat", true);
+        chatDialog.setSize(400, 500);
+        chatDialog.setLayout(new BorderLayout());
+        chatDialog.setLocationRelativeTo(this);
+
+        // 2. مساحة عرض الرسايل
+        JTextArea chatArea = new JTextArea();
+        chatArea.setEditable(false);
+        chatArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        JScrollPane scroll = new JScrollPane(chatArea);
+        chatDialog.add(scroll, BorderLayout.CENTER);
+
+        // 3. مساحة الكتابة والأزرار
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        JTextField inputField = new JTextField();
+        JButton btnSend = new JButton("Reply");
+        JButton btnRefresh = new JButton("Refresh");
+
+        JPanel btnPanel = new JPanel(new GridLayout(1, 2));
+        btnPanel.add(btnSend);
+        btnPanel.add(btnRefresh);
+
+        bottomPanel.add(inputField, BorderLayout.CENTER);
+        bottomPanel.add(btnPanel, BorderLayout.EAST);
+        chatDialog.add(bottomPanel, BorderLayout.SOUTH);
+
+        // 4. تعريف الهوية (أنا المدير بكلم الزبون)
+        String myName = "PM";       // أنا مين
+        String otherSide = "Customer"; // بكلم مين (ممكن نخليه عام)
+
+        // حمل الرسايل أول ما تفتح
+        loadMessagesFromFile(chatArea, myName);
+
+        // --- زرار الإرسال ---
+        btnSend.addActionListener(e -> {
+            String msg = inputField.getText().trim();
+            if (!msg.isEmpty()) {
+                saveMessageToFile(myName, otherSide, msg); // PM -> Customer
+                inputField.setText("");
+                loadMessagesFromFile(chatArea, myName);
+            }
+        });
+
+        // --- زرار الريفريش ---
+        btnRefresh.addActionListener(e -> {
+            loadMessagesFromFile(chatArea, myName);
+        });
+
+        chatDialog.setVisible(true);
+    }
+
+    // دالة قراءة الرسائل من الفايل
+    private void loadMessagesFromFile(JTextArea area, String me) {
+        area.setText(""); // فضي الشاشة
+        File file = new File("messages.txt");
+        if (!file.exists()) return;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 3) {
+                    String sender = parts[0];
+                    String receiver = parts[1];
+                    String msg = parts[2];
+
+                    // اعرض الرسالة لو تخصني (سواء أنا باعتها أو جيالي)
+                    if (sender.equalsIgnoreCase(me) || receiver.equalsIgnoreCase(me)) {
+                        if (sender.equalsIgnoreCase(me)) {
+                            area.append("Me (PM): " + msg + "\\n");
+                        } else {
+                            area.append("Customer: " + msg + "\\n");
+                        }
+                        area.append("-----------------\\n");
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // دالة حفظ الرسائل في الفايل
+    private void saveMessageToFile(String sender, String receiver, String msg) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("messages.txt", true))) {
+            bw.write(sender + "," + receiver + "," + msg);
+            bw.newLine();
+        } catch (IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error sending message!");
+        }
+    }
+
     
 }
 
