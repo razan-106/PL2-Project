@@ -1,8 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.helwan.event_management_system.UI.booking;
+
+import com.helwan.event_management_system.data.FileManager;
+import com.helwan.event_management_system.models.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 /**
  *
@@ -11,12 +12,85 @@ package com.helwan.event_management_system.UI.booking;
 public class MyBookingsScreen extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MyBookingsScreen.class.getName());
+    private FileManager fileManager;
+    private customer currentCustomer;
 
     /**
      * Creates new form MyBookingsScreen
+     * @param currentCustomer The logged-in customer
      */
-    public MyBookingsScreen() {
+    public MyBookingsScreen(customer currentCustomer) {
+        this.currentCustomer = currentCustomer;
+        
+        // Initialize FileManager with file paths
+        this.fileManager = new FileManager();
+        
         initComponents();
+        loadBookingsData();
+    }
+
+    /**
+     * Load bookings data into the table
+     */
+    private void loadBookingsData() {
+        try {
+            // Load users and events first
+            ArrayList<user> users = fileManager.loadUsers();
+            ArrayList<Event> events = fileManager.loadEvents();
+            
+            // Filter only customers from users list
+            ArrayList<customer> customers = new ArrayList<>();
+            for (user u : users) {
+                if (u instanceof customer) {
+                    customers.add((customer) u);
+                }
+            }
+            
+            // Load all bookings
+            ArrayList<Booking> allBookings = fileManager.loadBookings();
+            
+            // Filter bookings for current customer
+            ArrayList<Booking> customerBookings = new ArrayList<>();
+            for (Booking booking : allBookings) {
+                if (booking.getCustomerId().getId() == currentCustomer.getId()) {
+                    customerBookings.add(booking);
+                }
+            }
+            
+            // Populate table
+            populateTable(customerBookings);
+            
+            logger.info("Loaded " + customerBookings.size() + " bookings for customer: " + currentCustomer.getName());
+            
+        } catch (Exception e) {
+            logger.severe("Error loading bookings: " + e.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Error loading bookings: " + e.getMessage(), 
+                "Error", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Populate the table with booking data
+     */
+    private void populateTable(ArrayList<Booking> bookings) {
+        DefaultTableModel model = (DefaultTableModel) bookingsTable.getModel();
+        
+        // Clear existing rows
+        model.setRowCount(0);
+        
+        // Add bookings to table
+        for (Booking booking : bookings) {
+            Object[] row = {
+                booking.getBookingId(),
+                booking.getEventId().getType(),
+                booking.getEventId().getDate(),
+                booking.getStatus(),
+                String.format("%.2f", booking.getTotalPrice())
+            };
+            model.addRow(row);
+        }
     }
 
     /**
@@ -35,11 +109,13 @@ public class MyBookingsScreen extends javax.swing.JFrame {
         bookingsTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("My Bookings");
 
         refreshBtn.setText("Refresh");
         refreshBtn.addActionListener(this::refreshBtnActionPerformed);
 
         backBtn.setText("Back");
+        backBtn.addActionListener(this::backBtnActionPerformed);
 
         bookingsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -48,7 +124,15 @@ public class MyBookingsScreen extends javax.swing.JFrame {
             new String [] {
                 "Booking ID", "Event Type", "Date", "Status", "Total Price"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(bookingsTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -86,11 +170,22 @@ public class MyBookingsScreen extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void refreshBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshBtnActionPerformed
-        // TODO add your handling code here:
+        loadBookingsData();
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "Bookings refreshed successfully!", 
+            "Success", 
+            javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_refreshBtnActionPerformed
+
+    private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
+        this.dispose();
+        // Navigate back to previous screen 
+         new EVentBookForm().setVisible(true);
+    }//GEN-LAST:event_backBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
@@ -100,4 +195,3 @@ public class MyBookingsScreen extends javax.swing.JFrame {
     private javax.swing.JButton refreshBtn;
     // End of variables declaration//GEN-END:variables
 }
-

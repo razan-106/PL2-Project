@@ -212,10 +212,7 @@ if (jCheckBox1.isSelected()) {
         String password = txtPass.getText();
 
         // 1) Create FileManager with proper resource paths
-        FileManager fm = new FileManager(
-            FileManager.getResourcePath("data/users.txt"),
-            FileManager.getResourcePath("data/booking.txt")
-        );
+        FileManager fm = new FileManager();
 
         // 2) Pass FileManager to AuthenticationManager
         AuthenticationManager auth = new AuthenticationManager(fm);

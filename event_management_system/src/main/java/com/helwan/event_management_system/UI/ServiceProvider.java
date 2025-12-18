@@ -27,17 +27,14 @@ public class ServiceProvider extends JFrame {
         String [] spcolumns = {"Task ID", "Event", "Status","Price","Date","Location"};
         Object [][] spdata;
         try {
-            com.helwan.event_management_system.data.FileManager fileManager = new com.helwan.event_management_system.data.FileManager(
-                com.helwan.event_management_system.data.FileManager.getResourcePath("data/users.txt"),
-                com.helwan.event_management_system.data.FileManager.getResourcePath("data/booking.txt")
-            );
+            com.helwan.event_management_system.data.FileManager fileManager = new com.helwan.event_management_system.data.FileManager();
             java.util.ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
             java.util.ArrayList<com.helwan.event_management_system.models.Event> events = fileManager.loadEvents();
             java.util.ArrayList<com.helwan.event_management_system.models.customer> customers = new java.util.ArrayList<>();
             for (com.helwan.event_management_system.models.user u : users) {
                 if (u instanceof com.helwan.event_management_system.models.customer) customers.add((com.helwan.event_management_system.models.customer) u);
             }
-            java.util.ArrayList<com.helwan.event_management_system.models.Booking> bookings = fileManager.loadBookings(customers, events);
+            java.util.ArrayList<com.helwan.event_management_system.models.Booking> bookings = fileManager.loadBookings();
             java.util.List<Object[]> processingRows = new java.util.ArrayList<>();
             for (com.helwan.event_management_system.models.Booking booking : bookings) {
                 if ("Processing".equalsIgnoreCase(booking.getStatus())) {
@@ -111,17 +108,14 @@ public class ServiceProvider extends JFrame {
             }
             int bookingId = (int) spTable.getValueAt(selectedRow, 0);
             try {
-                com.helwan.event_management_system.data.FileManager fileManager = new com.helwan.event_management_system.data.FileManager(
-                    com.helwan.event_management_system.data.FileManager.getResourcePath("data/users.txt"),
-                    com.helwan.event_management_system.data.FileManager.getResourcePath("data/booking.txt")
-                );
+                com.helwan.event_management_system.data.FileManager fileManager = new com.helwan.event_management_system.data.FileManager();
                 java.util.ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
                 java.util.ArrayList<com.helwan.event_management_system.models.Event> events = fileManager.loadEvents();
                 java.util.ArrayList<com.helwan.event_management_system.models.customer> customers = new java.util.ArrayList<>();
                 for (com.helwan.event_management_system.models.user u : users) {
                     if (u instanceof com.helwan.event_management_system.models.customer) customers.add((com.helwan.event_management_system.models.customer) u);
                 }
-                java.util.ArrayList<com.helwan.event_management_system.models.Booking> bookings = fileManager.loadBookings(customers, events);
+                java.util.ArrayList<com.helwan.event_management_system.models.Booking> bookings = fileManager.loadBookings();
                 boolean found = false;
                 for (com.helwan.event_management_system.models.Booking booking : bookings) {
                     if (booking.getBookingId() == bookingId && "Processing".equalsIgnoreCase(booking.getStatus())) {
@@ -167,10 +161,7 @@ public class ServiceProvider extends JFrame {
 
             try {
                 // 1. تحميل البيانات (نفس الكود المعتاد)
-                com.helwan.event_management_system.data.FileManager fileManager = new com.helwan.event_management_system.data.FileManager(
-                    com.helwan.event_management_system.data.FileManager.getResourcePath("data/users.txt"),
-                    com.helwan.event_management_system.data.FileManager.getResourcePath("data/booking.txt")
-                );
+                com.helwan.event_management_system.data.FileManager fileManager = new com.helwan.event_management_system.data.FileManager();
                 
                 java.util.ArrayList<com.helwan.event_management_system.models.user> users = fileManager.loadUsers();
                 java.util.ArrayList<com.helwan.event_management_system.models.Event> events = fileManager.loadEvents();
@@ -178,7 +169,7 @@ public class ServiceProvider extends JFrame {
                 for (com.helwan.event_management_system.models.user u : users) {
                     if (u instanceof com.helwan.event_management_system.models.customer) customers.add((com.helwan.event_management_system.models.customer) u);
                 }
-                java.util.ArrayList<com.helwan.event_management_system.models.Booking> bookings = fileManager.loadBookings(customers, events);
+                java.util.ArrayList<com.helwan.event_management_system.models.Booking> bookings = fileManager.loadBookings();
 
                 // 2. البحث عن الحجز وتحديث التاريخ
                 boolean found = false;
