@@ -286,8 +286,8 @@ public class EVentBookForm extends javax.swing.JFrame {
 
         // 4️⃣ FileManager
         FileManager fm = new FileManager(
-            "src/main/resources/data/users.txt",
-            "src/main/resources/data/booking.txt"
+            FileManager.getResourcePath("data/users.txt"),
+            FileManager.getResourcePath("data/booking.txt")
         );
 
         // 5️⃣ Load existing bookings
